@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Registro</title>
+  <!-- Enlace al archivo de estilos CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Encabezado con menú de navegación -->
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="registro.html">Registro</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Contenido principal con el formulario -->
+  <main>
+    <h2>Formulario de Registro</h2>
+
+    <!-- Formulario con ID para ser referenciado en JavaScript -->
+    <!-- NOTA: No colocamos "action" ni "method" para manejar el envío desde JavaScript -->
+    <form id="formularioRegistro">
+      <label for="nombre">Nombre:</label>
+      <input type="text" name="nombre" id="nombre" required>
+
+      <label for="correo">Correo electrónico:</label>
+      <input type="email" name="correo" id="correo" required>
+
+      <label for="mensaje">Mensaje:</label>
+      <textarea name="mensaje" id="mensaje" required></textarea>
+
+      <button type="submit">Enviar</button>
+    </form>
+
+    <!-- Mensaje de confirmación que se muestra solo si el formulario fue enviado correctamente -->
+    <p id="confirmacion" style="color: green; display: none;">¡Formulario enviado con éxito!</p>
+  </main>
+
+  <!-- JavaScript embebido para manejar el envío del formulario sin redirección -->
+  <script>
+    // Referencia al formulario y al mensaje de confirmación
+    const formulario = document.getElementById("formularioRegistro");
+    const confirmacion = document.getElementById("confirmacion");
+
+    // Escucha el evento de envío del formulario
+    formulario.addEventListener("submit", function(event) {
+      event.preventDefault(); // Evita que se recargue la página
+
+      // Crea un objeto con los datos del formulario
+      const datos = new FormData(formulario);
+
+      // Envía los datos a Formspree con fetch y el método POST
+      fetch("https://formspree.io/f/xdkggopv", {
+        method: "POST",
+        body: datos,
+        headers: {
+          'Accept': 'application/json' // Indica que se espera una respuesta en JSON
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          formulario.reset(); // Limpia los campos del formulario
+          confirmacion.style.display = "block"; // Muestra el mensaje de éxito
+        } else {
+          alert("Ocurrió un error al enviar el formulario."); // Si la respuesta no es OK
+        }
+      })
+      .catch(error => {
+        // Captura errores de red u otros fallos
+        console.error("Error:", error);
+        alert("Ocurrió un error al enviar el formulario.");
+      });
+    });
+  </script>
+</body>
+</html>
